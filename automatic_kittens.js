@@ -36,6 +36,22 @@ function addCheckBox(element, property) {
         automaticKittens.options[property] = $('#' + id)[0].checked;
         customConsole(automaticKittens);
     });
+
+    element.append(checkbox);
+    element.append($('<label for="' + id + '">Activate or not the ' + property + '</label>'));
+    element.append($('<br />'));
+}
+
+function addCraftingCheckBox(element, property) {
+    var id = "crafting" + property + 'Chkbox';
+    var checkbox = $('<input id="' + id + '" type="checkbox" />');
+    checkbox.click(function() {
+        automaticKittens.options.crafting[property] = $('#' + id)[0].checked;
+    });
+
+    element.append(checkbox);
+    element.append($('<label for="' + id + '">Activate or not the crafting of ' + property + '</label>'));
+    element.append($('<br />'));
 }
 
 function addHtmlFunctionnality() {
@@ -50,91 +66,23 @@ function addHtmlFunctionnality() {
     parametersDiv.append(closeParametersLink);
 
     addCheckBox(parametersDiv, 'enable');
+    addCheckBox(parametersDiv, 'hunt');
+    addCheckBox(parametersDiv, 'pray');
+    addCheckBox(parametersDiv, 'promote');
+    addCheckBox(parametersDiv, 'autocraft');
+
+    addCraftingCheckBox(parametersDiv, 'parchment');
+    addCraftingCheckBox(parametersDiv, 'manuscript');
+    addCraftingCheckBox(parametersDiv, 'compedium');
+    addCraftingCheckBox(parametersDiv, 'blueprint');
+    addCraftingCheckBox(parametersDiv, 'wood');
+    addCraftingCheckBox(parametersDiv, 'beam');
+    addCraftingCheckBox(parametersDiv, 'slab');
+    addCraftingCheckBox(parametersDiv, 'plate');
+    addCraftingCheckBox(parametersDiv, 'steel');
     
-    var enableAutomationCheckbox = $('<input id="enableAutomation" type="checkbox" />');
-    enableAutomationCheckbox.click(function() {
-        automaticKittens.options.enable = $('#enableAutomation')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableAutomationCheckbox);
-    parametersDiv.append('<label for="enableAutomation">Activate or not the automation</label>');
-
-    var enableHuntingCheckbox = $('<input id="enableHunting" type="checkbox" />');
-    enableHuntingCheckbox.click(function() {
-        automaticKittens.options.hunt = $('#enableHunting')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableHuntingCheckbox);
-    parametersDiv.append('<label for="enableHunting">Enable hunting</label>');
-
-    var enablePraying = $('<input id="enablePraying" type="checkbox" />');
-    enablePraying.click(function() {
-        automaticKittens.options.crafting.pray = $('#enablePraying')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enablePraying);
-    parametersDiv.append('<label for="enablePraying">Enable praying</label>');
-
-    var enablePromote = $('<input id="enablePromote" type="checkbox" />');
-    enablePromote.click(function() {
-        automaticKittens.options.crafting.promote = $('#enablePromote')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enablePromote);
-    parametersDiv.append('<label for="enablePromote">Enable Promote kittens</label>');
-
-    var enableAutocraft = $('<input id="enableAutocraft" type="checkbox" />');
-    enableAutocraft.click(function() {
-        automaticKittens.options.crafting.autocraft = $('#enableAutocraft')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableAutocraft);
-    parametersDiv.append('<label for="enableAutocraft">Enable Autocraft</label>');
-
-    var enableParchmentCrafting = $('<input id="enableParchment" type="checkbox" />');
-    enableParchmentCrafting.click(function() {
-        automaticKittens.options.crafting.parchment = $('#enableParchment')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableParchmentCrafting);
-    parametersDiv.append('<label for="enableParchment">Enable crafting Parchment</label>');
-
-    var enableManuscriptCrafting = $('<input id="enableManuscript" type="checkbox" />');
-    enableManuscriptCrafting.click(function() {
-        automaticKittens.options.crafting.manuscript = $('#enableManuscript')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableManuscriptCrafting);
-    parametersDiv.append('<label for="enableManuscript">Enable crafting Manuscript</label>');
-
-    var enableCompediumCrafting = $('<input id="enableCompedium" type="checkbox" />');
-    enableCompediumCrafting.click(function() {
-        automaticKittens.options.crafting.compedium = $('#enableCompedium')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableCompediumCrafting);
-    parametersDiv.append('<label for="enableCompedium">Enable crafting Compedium</label>');
-
-    var enableBlueprintCrafting = $('<input id="enableBlueprint" type="checkbox" />');
-    enableBlueprintCrafting.click(function() {
-        automaticKittens.options.crafting.blueprint = $('#enableBlueprint')[0].checked;
-        customConsole(automaticKittens);
-    });
-
-    parametersDiv.append(enableBlueprintCrafting);
-    parametersDiv.append('<label for="enableBlueprint">Enable crafting Blueprint</label>');
 
     parametersDiv.append('<br/>');
-
-    
 
     $('#importDiv').after(parametersDiv);
 
@@ -211,7 +159,7 @@ function launchAutomate() {
             }
         },
         pray: function() {
-            if(isAlmostFull('faith')) {
+            if(utility.isAlmostFull('faith')) {
                 customConsole('PRAISE THE SUN !');
 				gamePage.religion.praise();
             }
@@ -221,6 +169,13 @@ function launchAutomate() {
                 customConsole('Kitten promoted !!!')
                 gamePage.village.promoteKittens();
             }
+        },
+        craft: function() {
+            utility.transformAll('catnip', 'wood');
+            utility.transformAll('wood', 'beam');
+            utility.transformAll('minerals', 'slab');
+            utility.transformAll('coal', 'steel');
+            utility.transformAll('iron', 'plate');
         }
     };
 
@@ -238,10 +193,13 @@ function launchAutomate() {
         if(automaticKittens.options.promote) {
             automaticKittens.promote();
         }
+        if(automaticKittens.options.autocraft) {
+            automaticKittens.craft();
+        }
     });
 
     gamePage.timer.addEvent(handler, 3); // Once per 3 ticks
-    customConsole("automation activated");
+    customConsole("automation activated - please update config to enable automation");
 }
 
 if(window.automaticKittens === undefined) {
