@@ -205,4 +205,5 @@ function launchAutomate() {
 if(window.automaticKittens === undefined) {
     launchAutomate();
     addHtmlFunctionnality();
+    setInterval(function() { $("div.btnContent:contains('Gather catnip')").click(); }, 1);
 }
