@@ -80,6 +80,7 @@ function addHtmlFunctionnality() {
     addCraftingCheckBox(parametersDiv, 'slab');
     addCraftingCheckBox(parametersDiv, 'plate');
     addCraftingCheckBox(parametersDiv, 'steel');
+    addCraftingCheckBox(parametersDiv, 'kerosene');
     
 
     parametersDiv.append('<br/>');
@@ -135,6 +136,7 @@ function launchAutomate() {
                 slab: false,
                 plate: false,
                 steel: false,
+                kerosene: false,
                 gear: false,
                 concrate: false,
                 alloy: false,
@@ -176,6 +178,7 @@ function launchAutomate() {
             utility.transformAll('minerals', 'slab');
             utility.transformAll('coal', 'steel');
             utility.transformAll('iron', 'plate');
+            utility.transformAll('oil', 'kerosene');
         }
     };
 
