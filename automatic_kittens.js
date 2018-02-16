@@ -27,6 +27,36 @@ utility = {
     }
 }
 
+function addAutoBuildBtn() {
+    //gamePage.tabs[0].buttons.forEach(function(button) { if(button.opts.building === 'biolab') { console.log('click on : ', button); /*button.buttonContent.click();*/ } })
+    //gamePage.bld.getPrices('observatory')
+    automaticKittens.autoBuildList = [];
+    gamePage.tabs.forEach(function(tab) {
+        if(tab.tabId === 'Bonfire') {
+            tab.buttons.forEach(function(button) {
+                var autoBuildButton = $('<a href="#" style="padding-left: 2px; float: right; cursor: pointer;">Auto OFF</a>');
+                var separator = $('<span class="linkBreak" style="float: right; padding-left: 2px;">|</span>');
+                autoBuildButton.click(function(event) {
+                    if($(this).text().includes('OFF')) {
+                        $(this).text('Auto ON');
+                        automaticKittens.autoBuildList.push(button.opts.building);
+                    } else {
+                        $(this.text('Auto OFF'));
+                        var index = automaticKittens.autoBuildList.indexOf(button.opts.building);
+                        if(index > -1) {
+                            automaticKittens.autoBuildList.splice(index, 1);
+                        }
+                    }
+                    
+                    event.stopPropagation();
+                });
+                $(button.buttonContent).append(separator);
+                $(button.buttonContent).append(autoBuildButton);
+            });
+        }
+    });
+}
+
 handler = null;
 
 function addCheckBox(element, property) {
@@ -70,6 +100,7 @@ function addHtmlFunctionnality() {
     addCheckBox(parametersDiv, 'pray');
     addCheckBox(parametersDiv, 'promote');
     addCheckBox(parametersDiv, 'autocraft');
+    addCheckBox(parametersDiv, 'autobuild');
 
     addCraftingCheckBox(parametersDiv, 'parchment');
     addCraftingCheckBox(parametersDiv, 'manuscript');
@@ -81,7 +112,8 @@ function addHtmlFunctionnality() {
     addCraftingCheckBox(parametersDiv, 'plate');
     addCraftingCheckBox(parametersDiv, 'steel');
     addCraftingCheckBox(parametersDiv, 'kerosene');
-    
+
+    addAutoBuildBtn();
 
     parametersDiv.append('<br/>');
 
@@ -126,6 +158,7 @@ function launchAutomate() {
             pray: false,
             promote: false,
             autocraft: false,
+            autobuild: false,
             crafting: {
                 parchment: false,
                 manuscript: false,
@@ -179,6 +212,9 @@ function launchAutomate() {
             utility.transformAll('coal', 'steel');
             utility.transformAll('iron', 'plate');
             utility.transformAll('oil', 'kerosene');
+        },
+        build: function() {
+            console.log(automaticKittens.autoBuildList);
         }
     };
 
@@ -198,6 +234,9 @@ function launchAutomate() {
         }
         if(automaticKittens.options.autocraft) {
             automaticKittens.craft();
+        }
+        if(automaticKittens.options.autobuild) {
+            automaticKittens.build();
         }
     });
 
